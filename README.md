@@ -103,4 +103,4 @@ npm run dev
 
 ## 📝 License
 
-© Zennisys 2025
+©Zennisys 2025
