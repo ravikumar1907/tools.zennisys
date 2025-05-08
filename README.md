@@ -98,9 +98,4 @@ cd tools.zennisys.ai
 npm install
 npm run dev
 ```
-
 ---
-
-## 📝 License
-
-©Zennisys 2025
