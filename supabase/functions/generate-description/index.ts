@@ -19,18 +19,11 @@ serve(async (req) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
   const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  // const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
   // Create client to identify the user
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    global: {
-      headers: {
-        Authorization: req.headers.get('Authorization')!,
-      },
-    },
-  });
-
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+  const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  // const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
   const user = (await supabase.auth.getUser()).data.user;
 
@@ -63,13 +56,30 @@ serve(async (req) => {
       ],
     }),
   });
-
+  if (!openaiRes.ok) {
+    const errBody = await openaiRes.text();
+    console.error('❌ OpenAI Error:', openaiRes.status, errBody);
+  
+    return new Response(JSON.stringify({
+      error: true,
+      message: 'OpenAI request failed',
+      status: openaiRes.status,
+      detail: errBody,
+    }), {
+      status: 200, // important: keep 200 to avoid Supabase 401 wrapping
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+  
   const json = await openaiRes.json();
-  const description = json.choices?.[0]?.message?.content || 'Failed to generate.';
+  const description = json.choices?.[0]?.message?.content || 'Failed to generate.1234';
 
-  // Insert result into DB if user is authenticated
+  Insert result into DB if user is authenticated
   if (user) {
-    await supabaseAdmin.from('descriptions').insert([
+    await supabase.from('descriptions').insert([
       {
         user_id: user.id,
         title,

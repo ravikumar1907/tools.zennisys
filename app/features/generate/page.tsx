@@ -16,12 +16,11 @@ export default function GenerateDescriptionPage() {
     setLoading(true);
     try {
       const res = await fetch(
-        'https://<your-project-id>.supabase.co/functions/v1/generate-description',
+        'https://xcqykcsrjdxdushndhpz.supabase.co/functions/v1/generate-description',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('sb-access-token')}`,
           },
           body: JSON.stringify({ title, feature }),
         }
@@ -56,7 +55,7 @@ export default function GenerateDescriptionPage() {
         for (const row of rows) {
           try {
             const res = await fetch(
-              'https://<your-project-id>.supabase.co/functions/v1/generate-description',
+              'https://xcqykcsrjdxdushndhpz.supabase.co/functions/v1/generate-description',
               {
                 method: 'POST',
                 headers: {
